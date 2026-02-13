@@ -106,11 +106,11 @@ function PostsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-1.5">
+        <div className="grid grid-cols-1 gap-1">
           {posts.map((p, idx) => (
             <div
               key={p.id}
-              className="group border border-slate-200 rounded-md p-2 md:p-2.5 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
+              className="group border border-slate-200 rounded-md p-1.5 md:p-2 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
             >
               <div className="text-left w-full">
                 <div className="mb-1 flex items-center gap-2 min-w-0">
