@@ -96,7 +96,7 @@ function PostsPage() {
           <span className="text-[11px] md:text-xs text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-end">
           <button className="btn btn-primary" onClick={() => location.href='/post-create.html'}>게시글 작성</button>
           <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
