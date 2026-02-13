@@ -5,8 +5,10 @@ function PostsPage() {
   const [me, setMe] = useState(null);
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFindingLast, setIsFindingLast] = useState(false);
 
   const PAGE_SIZE = 5;
+  const MAX_PAGE_SCAN = 500;
 
   const api = async (path, options = {}) => {
     const res = await fetch(`${baseUrl}${path}`, {
@@ -32,6 +34,36 @@ function PostsPage() {
     const r = await api(`/api/posts?page=${page}&limit=${PAGE_SIZE}`);
     setPosts(r?.data || []);
     setCurrentPage(page);
+  };
+
+  const goFirstPage = async () => {
+    await loadPosts(1);
+  };
+
+  const goLastPage = async () => {
+    setIsFindingLast(true);
+    try {
+      let page = Math.max(1, currentPage);
+      let safety = 0;
+
+      while (safety < MAX_PAGE_SCAN) {
+        const r = await api(`/api/posts?page=${page}&limit=${PAGE_SIZE}`);
+        const data = r?.data || [];
+
+        if (data.length < PAGE_SIZE) {
+          setPosts(data);
+          setCurrentPage(page);
+          return;
+        }
+
+        page += 1;
+        safety += 1;
+      }
+
+      await loadPosts(currentPage);
+    } finally {
+      setIsFindingLast(false);
+    }
   };
 
   const logout = async () => {
@@ -75,15 +107,19 @@ function PostsPage() {
               key={p.id}
               className="group border border-slate-200 rounded-lg p-2.5 md:p-3 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
             >
-              <button className="text-left w-full" onClick={() => location.href=`/comments.html?postId=${p.id}`}>
+              <div className="text-left w-full">
                 <div className="mb-1">
-                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold">
+                  <button
+                    className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold hover:bg-indigo-100"
+                    onClick={() => location.href=`/comments.html?postId=${p.id}`}
+                    title="댓글 페이지로 이동"
+                  >
                     {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
-                  </span>
+                  </button>
                 </div>
                 <p className="font-semibold text-sm md:text-base text-slate-900 leading-tight break-words line-clamp-1">{p.title}</p>
                 <p className="mt-0.5 text-xs md:text-sm text-slate-600 line-clamp-1 break-words">{p.content}</p>
-              </button>
+              </div>
             </div>
           ))}
 
@@ -95,6 +131,14 @@ function PostsPage() {
         </div>
 
         <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+          <button
+            className="btn btn-muted"
+            disabled={currentPage <= 1}
+            onClick={goFirstPage}
+          >
+            처음
+          </button>
+
           <button
             className="btn btn-muted"
             disabled={currentPage <= 1}
@@ -119,6 +163,14 @@ function PostsPage() {
             onClick={() => hasNextPage && loadPosts(currentPage + 1)}
           >
             다음
+          </button>
+
+          <button
+            className="btn btn-muted"
+            disabled={isFindingLast || posts.length === 0}
+            onClick={goLastPage}
+          >
+            {isFindingLast ? '마지막 찾는 중...' : '마지막'}
           </button>
         </div>
       </section>
