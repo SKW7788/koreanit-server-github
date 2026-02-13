@@ -58,7 +58,7 @@ function PostsPage() {
         </div>
       </header>
 
-      <section className="card p-5 space-y-4">
+      <section className="card p-4 space-y-3">
         <div className="flex items-end justify-between">
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
           <span className="text-xs md:text-sm text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
@@ -69,20 +69,20 @@ function PostsPage() {
           <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
 
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {posts.map((p, idx) => (
             <div
               key={p.id}
-              className="group border border-slate-200 rounded-xl p-3 md:p-4 bg-gradient-to-br from-white to-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group border border-slate-200 rounded-lg p-2.5 md:p-3 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
             >
               <button className="text-left w-full" onClick={() => location.href=`/comments.html?postId=${p.id}`}>
-                <div className="mb-2">
-                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] md:text-xs font-semibold">
+                <div className="mb-1">
+                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold">
                     {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
                   </span>
                 </div>
-                <p className="font-semibold text-base md:text-lg text-slate-900 leading-snug break-words">{p.title}</p>
-                <p className="mt-1 text-sm md:text-base text-slate-600 line-clamp-2 break-words">{p.content}</p>
+                <p className="font-semibold text-sm md:text-base text-slate-900 leading-tight break-words line-clamp-1">{p.title}</p>
+                <p className="mt-0.5 text-xs md:text-sm text-slate-600 line-clamp-1 break-words">{p.content}</p>
               </button>
             </div>
           ))}
