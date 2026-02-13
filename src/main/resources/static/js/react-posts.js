@@ -77,12 +77,12 @@ function PostsPage() {
   const pageTabs = Array.from({ length: 5 }, (_, i) => Math.max(1, currentPage - 2) + i);
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
-      <header className="card p-5">
+    <div className="max-w-5xl mx-auto p-3 md:p-5 space-y-4">
+      <header className="card rounded-lg p-3">
         <div className="flex items-center justify-between gap-2">
           <div>
-            <h1 className="text-2xl font-bold">Koreanit 게시판</h1>
-            {me && <p className="text-sm text-slate-500 mt-1">{me.username}님</p>}
+            <h1 className="text-xl font-bold">Koreanit 게시판</h1>
+            {me && <p className="text-xs text-slate-500 mt-0.5">{me.username}님</p>}
           </div>
           <div className="flex gap-2">
             <button className="btn btn-muted" onClick={logout}>로그아웃</button>
@@ -90,10 +90,10 @@ function PostsPage() {
         </div>
       </header>
 
-      <section className="card p-4 space-y-3">
+      <section className="card rounded-lg p-3 space-y-2.5">
         <div className="flex items-end justify-between">
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
-          <span className="text-xs md:text-sm text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
+          <h2 className="text-lg md:text-xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
+          <span className="text-[11px] md:text-xs text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
         </div>
 
         <div className="flex gap-2">
@@ -101,11 +101,11 @@ function PostsPage() {
           <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
 
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 gap-1.5">
           {posts.map((p, idx) => (
             <div
               key={p.id}
-              className="group border border-slate-200 rounded-lg p-2.5 md:p-3 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
+              className="group border border-slate-200 rounded-md p-2 md:p-2.5 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
             >
               <div className="text-left w-full">
                 <div className="mb-1 flex items-center gap-2 min-w-0">
@@ -116,9 +116,9 @@ function PostsPage() {
                   >
                     {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
                   </button>
-                  <p className="font-semibold text-sm md:text-base text-slate-900 leading-tight break-words line-clamp-1 min-w-0">{p.title}</p>
+                  <p className="font-semibold text-xs md:text-sm text-slate-900 leading-tight break-words line-clamp-1 min-w-0">{p.title}</p>
                 </div>
-                <p className="mt-0.5 text-xs md:text-sm text-slate-600 line-clamp-1 break-words">{p.content}</p>
+                <p className="mt-0.5 text-[11px] md:text-xs text-slate-600 line-clamp-1 break-words">{p.content}</p>
               </div>
             </div>
           ))}
