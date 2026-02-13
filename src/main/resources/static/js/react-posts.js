@@ -114,7 +114,7 @@ function PostsPage() {
               <div className="text-left w-full">
                 <div className="mb-1 flex items-center gap-2 min-w-0">
                   <button
-                    className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold hover:bg-indigo-100 shrink-0"
+                    className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold hover:bg-indigo-100 shrink-0 underline underline-offset-2"
                     onClick={() => location.href=`/comments.html?postId=${p.id}`}
                     title="댓글 페이지로 이동"
                   >
