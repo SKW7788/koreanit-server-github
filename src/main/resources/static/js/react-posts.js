@@ -108,16 +108,16 @@ function PostsPage() {
               className="group border border-slate-200 rounded-lg p-2.5 md:p-3 bg-gradient-to-br from-white to-slate-50 hover:shadow-sm transition-all duration-200"
             >
               <div className="text-left w-full">
-                <div className="mb-1">
+                <div className="mb-1 flex items-center gap-2 min-w-0">
                   <button
-                    className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold hover:bg-indigo-100"
+                    className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold hover:bg-indigo-100 shrink-0"
                     onClick={() => location.href=`/comments.html?postId=${p.id}`}
                     title="댓글 페이지로 이동"
                   >
                     {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
                   </button>
+                  <p className="font-semibold text-sm md:text-base text-slate-900 leading-tight break-words line-clamp-1 min-w-0">{p.title}</p>
                 </div>
-                <p className="font-semibold text-sm md:text-base text-slate-900 leading-tight break-words line-clamp-1">{p.title}</p>
                 <p className="mt-0.5 text-xs md:text-sm text-slate-600 line-clamp-1 break-words">{p.content}</p>
               </div>
             </div>
