@@ -37,7 +37,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-6">
+    <div className="max-w-xl mx-auto p-4 md:p-8 space-y-6">
       {toast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
           {toast}

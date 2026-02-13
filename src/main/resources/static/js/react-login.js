@@ -27,7 +27,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-6">
+    <div className="max-w-sm mx-auto p-4 md:p-8 space-y-6">
       <header className="card p-5 text-center"><h1 className="text-2xl font-bold">Koreanit 게시판</h1></header>
       <section className="card p-5 space-y-3">
         <h2 className="text-lg font-semibold">로그인</h2>
