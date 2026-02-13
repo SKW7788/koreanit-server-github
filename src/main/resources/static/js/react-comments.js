@@ -79,9 +79,9 @@ function CommentsPage() {
   useEffect(() => { init(); }, []);
 
   return (
-    <div className="max-w-md mx-auto p-4 md:p-8 space-y-6">
+    <div className="max-w-[34rem] mx-auto p-4 md:p-8 space-y-6">
       <header className="card p-5 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">댓글 페이지</h1>
+        <h1 className="text-2xl font-bold">댓글</h1>
         <button className="btn btn-muted" onClick={() => location.href='/posts.html'}>목록으로</button>
       </header>
 
