@@ -10,6 +10,9 @@ function BoardPage() {
   const [newComment, setNewComment] = useState('');
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingContent, setEditingContent] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 10;
 
   const api = async (path, options = {}) => {
     const res = await fetch(`${baseUrl}${path}`, {
@@ -31,9 +34,10 @@ function BoardPage() {
     }
   };
 
-  const loadPosts = async () => {
-    const r = await api('/api/posts?page=1&limit=20');
+  const loadPosts = async (page = currentPage) => {
+    const r = await api(`/api/posts?page=${page}&limit=${PAGE_SIZE}`);
     setPosts(r?.data || []);
+    setCurrentPage(page);
   };
 
   const selectPostWithComments = async (post) => {
@@ -53,7 +57,7 @@ function BoardPage() {
   const createPost = async () => {
     await api('/api/posts', { method: 'POST', body: JSON.stringify(postForm) });
     setPostForm({ title: '', content: '' });
-    await loadPosts();
+    await loadPosts(1);
   };
 
   const createComment = async () => {
@@ -95,8 +99,11 @@ function BoardPage() {
 
   useEffect(() => {
     loadMe();
-    loadPosts();
+    loadPosts(1);
   }, []);
+
+  const hasNextPage = posts.length === PAGE_SIZE;
+  const pageTabs = Array.from({ length: 5 }, (_, i) => Math.max(1, currentPage - 2) + i);
 
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
@@ -114,14 +121,14 @@ function BoardPage() {
         <textarea className="input" rows="3" placeholder="content" value={postForm.content} onChange={e => setPostForm({ ...postForm, content: e.target.value })}></textarea>
         <div className="flex gap-2">
           <button className="btn btn-primary" onClick={createPost}>작성</button>
-          <button className="btn btn-muted" onClick={loadPosts}>새로고침</button>
+          <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
       </section>
 
       <section className="card p-6 space-y-5">
         <div className="flex items-end justify-between">
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
-          <span className="text-sm md:text-base text-slate-500">총 {posts.length}개</span>
+          <span className="text-sm md:text-base text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
@@ -149,6 +156,34 @@ function BoardPage() {
               게시글이 없습니다.
             </div>
           )}
+        </div>
+
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+          <button
+            className="btn btn-muted"
+            disabled={currentPage <= 1}
+            onClick={() => currentPage > 1 && loadPosts(currentPage - 1)}
+          >
+            이전
+          </button>
+
+          {pageTabs.map(page => (
+            <button
+              key={page}
+              className={`btn ${page === currentPage ? 'btn-primary' : 'btn-muted'}`}
+              onClick={() => loadPosts(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className="btn btn-muted"
+            disabled={!hasNextPage}
+            onClick={() => hasNextPage && loadPosts(currentPage + 1)}
+          >
+            다음
+          </button>
         </div>
       </section>
 
