@@ -1,0 +1,256 @@
+#@baseUrl = http://localhost:8080
+
+### http://localhost:8080/hello/users?limit=5
+
+### users (limit 1000)
+#GET {{baseUrl}}/hello/users?limit=0
+#GET {{baseUrl}}/hello/users
+
+### user by id
+#GET {{baseUrl}}/hello/users/10
+
+### posts (limit 1000)
+#GET {{baseUrl}}/hello/posts?limit=10
+#GET {{baseUrl}}/hello/posts
+
+### post by id
+#GET {{baseUrl}}/hello/posts/100
+
+### users (limit 1000)
+#GET {{baseUrl}}/hello/users/
+
+### user by id
+#GET {{baseUrl}}/hello/users/0
+
+### posts (limit 1000)
+#GET {{baseUrl}}/hello/posts
+
+### post by id
+#GET {{baseUrl}}/hello/posts/0
+
+@baseUrl = http://localhost:8080
+@json = application/json
+
+### 1) 회원가입 admin
+POST {{baseUrl}}/api/users
+Content-Type: {{json}}
+
+{
+  "username": "admin",
+  "password": "1234",
+  "nickname": "관리자",
+  "email": "admIN123@admin.com"
+}
+
+### 1) 회원가입 일반
+POST {{baseUrl}}/api/users
+Content-Type: {{json}}
+
+{
+  "username": "test",
+  "password": "1234",
+  "nickname": "관리자",
+  "email": "admIN124@admin.com"
+}
+# 설명: 신규 유저를 생성하고 응답으로 userId를 받는다.
+
+### 2) 로그인(세션 생성)
+POST {{baseUrl}}/api/login
+Content-Type: {{json}}
+
+{
+  "username": "admin",
+  "password": "1234",
+  "nickname": "관리자",
+  "email": "1dmIN123@admin.com"
+}
+
+### 2) 로그인(세션 생성)
+POST {{baseUrl}}/api/login
+Content-Type: {{json}}
+
+{
+  "username": "test",
+  "password": "1234",
+  "nickname": "관리자",
+  "email": "dmIN124@admin.com"
+}
+
+
+### 2) 로그인(세션 생성)
+POST {{baseUrl}}/api/login
+Content-Type: {{json}}
+
+{
+  "username": "{{$timestamp}}",
+  "password": "1234568",
+  "nickname": "nickname",
+  "email": "1dmIN1243@admin.com"
+}
+
+### 3) 내 정보 조회(/api/me)
+GET {{baseUrl}}/api/me
+
+### 4) 사용자 목록(limit)
+GET {{baseUrl}}/api/users?limit=10
+
+### 5) 사용자 단건 조회
+GET {{baseUrl}}/api/users/2
+
+### 6) 닉네임 변경
+PUT {{baseUrl}}/api/users/2/nickname
+Content-Type: {{json}}
+
+{
+  "nickname": "nickname2"
+}
+# 설명: id=1 사용자의 nickname을 변경한다.
+
+### 7) 비밀번호 변경
+PUT {{baseUrl}}/api/users/11/password
+Content-Type: {{json}}
+
+{
+  "password": "newpassword"
+}
+
+### 8) 로그아웃(세션 삭제)
+POST {{baseUrl}}/api/logout
+
+### 9) 사용자삭제
+DELETE {{baseUrl}}/api/users/
+
+
+### 10) 이메일 변경
+PUT {{baseUrl}}/api/users/15/email
+Content-Type: application/json
+
+{
+  "email": "email@email.com"
+}
+
+@baseUrl = http://localhost:8080
+
+### username 누락 (400)
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "password": "1234",
+  "nickname": "테스트",
+  "email": "test@test.com"
+}
+
+
+### username 길이 오류 (400)
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "123456GF",
+  "password": "1234",
+  "nickname": "테스트12",
+  "email": "ABCDFGHZ@test1com"
+}
+
+### password 너무 짧음 (400)
+PUT {{baseUrl}}/api/users/10060/password
+Content-Type: application/json
+
+{
+  "password": "12"
+}
+
+### Step1 - username 중복 (409)
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "test1",
+  "password": "1234",
+  "nickname": "테스트",
+  "email": "t1_new@test.com"
+}
+
+### Step2 - email 중복 (409)
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "1234",
+  "nickname": "테스트",
+  "email": "test1@test.com"
+}
+
+
+### 5) 사용자 단건 조회
+GET {{baseUrl}}/api/users/10062
+
+###
+# 서버 동작 확인용 헬스체크
+GET {{baseUrl}}/hello/users?limit=1
+
+###
+# 로그인 없이 보호 API 호출 → 401(ApiResponse)
+GET {{baseUrl}}/api/me
+
+###
+# 회원가입은 인증 없이 허용 → 200 또는 409(중복)
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser01123",
+  "password": "1234",
+  "nickname": "테스트",
+  "email": "testuser012@example.com"
+}
+
+###
+# 로그인 → 200 + Set-Cookie(JSESSIONID)
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "testuser01123",
+  "password": "1234"
+}
+
+###
+# 로그인 후 보호 API 호출 → 200
+GET {{baseUrl}}/api/me
+
+###
+# /api/** 보호 규칙 확인(로그인 전 401, 후 200/403/404)
+GET {{baseUrl}}/api/users?limit=10
+
+###
+# 로그아웃 (세션 무효화 + 쿠키 삭제)
+POST {{baseUrl}}/api/logout
+
+@host = http://localhost:8080
+
+### 로그아웃(세션 삭제)
+POST {{host}}/api/logout
+
+### 회원가입 (정상)
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "1234",
+  "nickname": "게시글작성자",
+  "email": "test@example.com"
+}
+
+### 로그인 - 세션 쿠키 발급
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "1234"
+}
+

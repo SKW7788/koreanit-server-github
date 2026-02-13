@@ -1,0 +1,27 @@
+# 환경 분리 + CORS (배포 준비 단계)  전 단계 사용
+# spring:
+#   application:
+#     name: spring
+#   datasource:
+#     url: jdbc:mysql://localhost:3306/koreanit_service?serverTimezone=Asia/Seoul&characterEncoding=utf8
+#     username: koreanit_app
+#     password: password
+#     driver-class-name: com.mysql.cj.jdbc.Driver   
+#   session:
+#     store-type: redis
+#     timeout: 7d
+#   data:
+#     redis:
+#       host: 127.0.0.1
+#       port: 6379
+# 
+# 환경 분리 + CORS (배포 준비 단계) 사용
+spring:
+  forward-headers-strategy: framework
+
+  profiles:
+    default: dev
+
+logging:
+  level:
+    root: INFO

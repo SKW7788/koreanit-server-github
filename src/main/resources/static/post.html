@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>게시글 상세</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="/css/site.css"/>
+</head>
+<body class="bg-slate-50">
+  <div id="app" class="container-page space-y-4">
+    <div class="card p-5 flex justify-between items-center">
+      <h1 class="text-xl font-bold">게시글 상세</h1>
+      <a class="btn btn-muted" href="/posts.html">목록으로</a>
+    </div>
+
+    <div class="card p-5" v-if="post">
+      <h2 class="text-lg font-bold">#{{post.id}} {{ post.title }}</h2>
+      <p class="mt-2 text-slate-700">{{ post.content }}</p>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-semibold">댓글</h3>
+      <div class="mt-2 flex gap-2">
+        <input v-model="comment" class="input" placeholder="댓글 내용"/>
+        <button class="btn btn-primary" @click="addComment">등록</button>
+      </div>
+
+      <div class="mt-3 space-y-2">
+        <div v-for="c in comments" :key="c.id" class="border rounded-lg p-3 flex justify-between items-center gap-3">
+          <div>
+            <p class="font-semibold text-sm">#{{c.id}}</p>
+            <p class="text-sm text-slate-700">{{ c.content }}</p>
+          </div>
+          <button class="btn btn-danger" @click="removeComment(c.id)">삭제</button>
+        </div>
+        <div v-if="comments.length===0" class="text-slate-500 text-sm">댓글이 없습니다.</div>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <pre class="log-panel">{{ logs }}</pre>
+    </div>
+  </div>
+
+  <script src="/js/api-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    const params = new URLSearchParams(location.search);
+    const postId = Number(params.get('id'));
+
+    createApp({
+      data:()=>({ post:null, comments:[], comment:'', logs:'Ready\n' }),
+      methods:{
+        log(t,p){ this.logs = `[${new Date().toLocaleTimeString()}] ${t}\n${typeof p==='string'?p:JSON.stringify(p,null,2)}\n\n` + this.logs; },
+        async load(){
+          if(!postId){ this.log('오류','id 쿼리파라미터가 필요합니다. 예: /post.html?id=1'); return; }
+          try { const p = await ApiClient.post(postId); this.post = p?.data; this.log(`GET /api/posts/${postId}`, p); }
+          catch(e){ this.log('게시글 조회 실패', e.body||e.message); }
+
+          try { const c = await ApiClient.comments(postId,50); this.comments = c?.data || []; this.log(`GET /api/posts/${postId}/comments`, c); }
+          catch(e){ this.log('댓글 조회 실패', e.body||e.message); }
+        },
+        async addComment(){
+          if(!this.comment.trim()) return;
+          try { const r = await ApiClient.createComment(postId, {content:this.comment}); this.log('POST comment', r); this.comment=''; await this.load(); }
+          catch(e){ this.log('댓글 생성 실패', e.body||e.message); }
+        },
+        async removeComment(id){
+          try { const r = await ApiClient.deleteComment(id); this.log(`DELETE /api/comments/${id}`, r); await this.load(); }
+          catch(e){ this.log('댓글 삭제 실패', e.body||e.message); }
+        }
+      },
+      mounted(){ this.load(); }
+    }).mount('#app');
+  </script>
+</body>
+</html>
