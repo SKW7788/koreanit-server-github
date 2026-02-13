@@ -6,7 +6,7 @@ function PostsPage() {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
 
   const api = async (path, options = {}) => {
     const res = await fetch(`${baseUrl}${path}`, {
