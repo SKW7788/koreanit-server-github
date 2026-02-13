@@ -4,6 +4,9 @@ function PostsPage() {
   const [baseUrl] = useState(localStorage.getItem('reactBaseUrl') || location.origin);
   const [me, setMe] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 10;
 
   const api = async (path, options = {}) => {
     const res = await fetch(`${baseUrl}${path}`, {
@@ -25,9 +28,10 @@ function PostsPage() {
     }
   };
 
-  const loadPosts = async () => {
-    const r = await api('/api/posts?page=1&limit=50');
+  const loadPosts = async (page = currentPage) => {
+    const r = await api(`/api/posts?page=${page}&limit=${PAGE_SIZE}`);
     setPosts(r?.data || []);
+    setCurrentPage(page);
   };
 
   const logout = async () => {
@@ -35,10 +39,13 @@ function PostsPage() {
     location.href = '/';
   };
 
-  useEffect(() => { loadMe(); loadPosts(); }, []);
+  useEffect(() => { loadMe(); loadPosts(1); }, []);
+
+  const hasNextPage = posts.length === PAGE_SIZE;
+  const pageTabs = Array.from({ length: 5 }, (_, i) => Math.max(1, currentPage - 2) + i);
 
   return (
-    <div className="max-w-md mx-auto p-4 md:p-8 space-y-6">
+    <div className="max-w-5xl mx-auto p-4 md:p-8 space-y-6">
       <header className="card p-5">
         <div className="flex items-center justify-between gap-2">
           <div>
@@ -51,28 +58,68 @@ function PostsPage() {
         </div>
       </header>
 
-      <section className="card p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">게시글 목록</h2>
-          <div className="flex gap-2">
-            <button className="btn btn-primary" onClick={() => location.href='/post-create.html'}>게시글 작성</button>
-            <button className="btn btn-muted" onClick={loadPosts}>새로고침</button>
-          </div>
+      <section className="card p-6 space-y-5">
+        <div className="flex items-end justify-between">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
+          <span className="text-sm md:text-base text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
         </div>
 
-        <div className="space-y-2">
+        <div className="flex gap-2">
+          <button className="btn btn-primary" onClick={() => location.href='/post-create.html'}>게시글 작성</button>
+          <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
           {posts.map((p, idx) => (
-            <div key={p.id} className="border rounded-lg p-3">
+            <div
+              key={p.id}
+              className="group border border-slate-200 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-white to-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            >
               <button className="text-left w-full" onClick={() => location.href=`/comments.html?postId=${p.id}`}>
-                <p className="font-semibold text-black break-all" style={{ maxWidth: '50ch' }}>
-                  <span className="text-indigo-700 underline">{idx + 1}. #{p.id}</span>
-                  <span> {p.title}</span>
-                </p>
-                <p className="text-sm text-slate-600 break-all" style={{ maxWidth: '50ch' }}>{p.content}</p>
+                <div className="mb-2">
+                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2.5 py-1 text-xs md:text-sm font-semibold">
+                    {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
+                  </span>
+                </div>
+                <p className="font-bold text-xl md:text-2xl text-slate-900 leading-snug break-words">{p.title}</p>
+                <p className="mt-2 text-base md:text-lg text-slate-600 line-clamp-2 break-words">{p.content}</p>
               </button>
             </div>
           ))}
-          {posts.length === 0 && <p className="text-sm text-slate-500">게시글이 없습니다.</p>}
+
+          {posts.length === 0 && (
+            <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-center text-lg text-slate-500">
+              게시글이 없습니다.
+            </div>
+          )}
+        </div>
+
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
+          <button
+            className="btn btn-muted"
+            disabled={currentPage <= 1}
+            onClick={() => currentPage > 1 && loadPosts(currentPage - 1)}
+          >
+            이전
+          </button>
+
+          {pageTabs.map(page => (
+            <button
+              key={page}
+              className={`btn ${page === currentPage ? 'btn-primary' : 'btn-muted'}`}
+              onClick={() => loadPosts(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className="btn btn-muted"
+            disabled={!hasNextPage}
+            onClick={() => hasNextPage && loadPosts(currentPage + 1)}
+          >
+            다음
+          </button>
         </div>
       </section>
     </div>
