@@ -96,7 +96,7 @@ function CommentsPage() {
         <h3 className="font-semibold">댓글 작성</h3>
         <div className="flex gap-2">
           <input className="input break-all" style={{ maxWidth: '50ch' }} placeholder="댓글 입력" value={newComment} onChange={e => setNewComment(e.target.value)} />
-          <button className="btn btn-primary" onClick={createComment}>등록</button>
+          <button className="btn btn-primary whitespace-nowrap" onClick={createComment}>등록</button>
         </div>
       </section>
 
