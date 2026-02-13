@@ -77,7 +77,7 @@ function PostsPage() {
   const pageTabs = Array.from({ length: 5 }, (_, i) => Math.max(1, currentPage - 2) + i);
 
   return (
-    <div className="max-w-4xl mx-auto p-3 md:p-5 space-y-4">
+    <div className="max-w-3xl mx-auto p-3 md:p-5 space-y-4">
       <header className="card rounded-lg p-3">
         <div className="flex items-center justify-between gap-2">
           <div>
