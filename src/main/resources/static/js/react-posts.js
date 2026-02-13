@@ -58,10 +58,10 @@ function PostsPage() {
         </div>
       </header>
 
-      <section className="card p-6 space-y-5">
+      <section className="card p-5 space-y-4">
         <div className="flex items-end justify-between">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
-          <span className="text-sm md:text-base text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
+          <span className="text-xs md:text-sm text-slate-500">페이지 {currentPage} · {posts.length}개 표시</span>
         </div>
 
         <div className="flex gap-2">
@@ -69,26 +69,26 @@ function PostsPage() {
           <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {posts.map((p, idx) => (
             <div
               key={p.id}
-              className="group border border-slate-200 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-white to-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group border border-slate-200 rounded-xl p-3 md:p-4 bg-gradient-to-br from-white to-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
               <button className="text-left w-full" onClick={() => location.href=`/comments.html?postId=${p.id}`}>
                 <div className="mb-2">
-                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2.5 py-1 text-xs md:text-sm font-semibold">
+                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[11px] md:text-xs font-semibold">
                     {((currentPage - 1) * PAGE_SIZE) + idx + 1}. POST #{p.id}
                   </span>
                 </div>
-                <p className="font-bold text-xl md:text-2xl text-slate-900 leading-snug break-words">{p.title}</p>
-                <p className="mt-2 text-base md:text-lg text-slate-600 line-clamp-2 break-words">{p.content}</p>
+                <p className="font-semibold text-base md:text-lg text-slate-900 leading-snug break-words">{p.title}</p>
+                <p className="mt-1 text-sm md:text-base text-slate-600 line-clamp-2 break-words">{p.content}</p>
               </button>
             </div>
           ))}
 
           {posts.length === 0 && (
-            <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-center text-lg text-slate-500">
+            <div className="border border-dashed border-slate-300 rounded-xl p-6 text-center text-base text-slate-500">
               게시글이 없습니다.
             </div>
           )}
