@@ -118,19 +118,37 @@ function BoardPage() {
         </div>
       </section>
 
-      <section className="card p-6 space-y-4">
-        <h2 className="text-2xl font-semibold">게시글 목록</h2>
-        <div className="space-y-3">
+      <section className="card p-6 space-y-5">
+        <div className="flex items-end justify-between">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">게시글 목록</h2>
+          <span className="text-sm md:text-base text-slate-500">총 {posts.length}개</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
           {posts.map(p => (
-            <div key={p.id} className="border rounded-lg p-4 flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold text-xl">#{p.id} {p.title}</p>
-                <p className="text-lg text-slate-600 line-clamp-1">{p.content}</p>
+            <div
+              key={p.id}
+              className="group border border-slate-200 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-white to-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex items-start justify-between gap-4"
+            >
+              <div className="min-w-0">
+                <div className="mb-2">
+                  <span className="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2.5 py-1 text-xs md:text-sm font-semibold">
+                    POST #{p.id}
+                  </span>
+                </div>
+                <p className="font-bold text-xl md:text-2xl text-slate-900 leading-snug break-words">{p.title}</p>
+                <p className="mt-2 text-base md:text-lg text-slate-600 line-clamp-2 break-words">{p.content}</p>
               </div>
-              <button className="btn btn-primary" onClick={() => selectPostWithComments(p)}>댓글</button>
+
+              <button className="btn btn-primary shrink-0" onClick={() => selectPostWithComments(p)}>댓글</button>
             </div>
           ))}
-          {posts.length === 0 && <p className="text-lg text-slate-500">게시글이 없습니다.</p>}
+
+          {posts.length === 0 && (
+            <div className="border border-dashed border-slate-300 rounded-2xl p-8 text-center text-lg text-slate-500">
+              게시글이 없습니다.
+            </div>
+          )}
         </div>
       </section>
 
