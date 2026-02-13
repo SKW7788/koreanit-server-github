@@ -101,6 +101,10 @@ function PostsPage() {
           <button className="btn btn-muted" onClick={() => loadPosts(currentPage)}>새로고침</button>
         </div>
 
+        <p className="text-[11px] md:text-xs text-slate-600">
+          댓글 작성은 <span className="underline underline-offset-2 font-semibold">게시글번호</span>를 클릭하여 작성하십시요.
+        </p>
+
         <div className="grid grid-cols-1 gap-1.5">
           {posts.map((p, idx) => (
             <div
