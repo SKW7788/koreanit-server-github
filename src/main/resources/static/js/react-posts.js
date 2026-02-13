@@ -7,7 +7,7 @@ function PostsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isFindingLast, setIsFindingLast] = useState(false);
 
-  const PAGE_SIZE = 5;
+  const PAGE_SIZE = 10;
   const MAX_PAGE_SCAN = 500;
 
   const api = async (path, options = {}) => {
