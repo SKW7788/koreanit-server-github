@@ -119,18 +119,18 @@ function BoardPage() {
       </section>
 
       <section className="card p-6 space-y-4">
-        <h2 className="text-xl font-semibold">게시글 목록</h2>
+        <h2 className="text-2xl font-semibold">게시글 목록</h2>
         <div className="space-y-3">
           {posts.map(p => (
             <div key={p.id} className="border rounded-lg p-4 flex items-center justify-between gap-3">
               <div>
-                <p className="font-semibold text-lg">#{p.id} {p.title}</p>
-                <p className="text-base text-slate-600 line-clamp-1">{p.content}</p>
+                <p className="font-semibold text-xl">#{p.id} {p.title}</p>
+                <p className="text-lg text-slate-600 line-clamp-1">{p.content}</p>
               </div>
               <button className="btn btn-primary" onClick={() => selectPostWithComments(p)}>댓글</button>
             </div>
           ))}
-          {posts.length === 0 && <p className="text-base text-slate-500">게시글이 없습니다.</p>}
+          {posts.length === 0 && <p className="text-lg text-slate-500">게시글이 없습니다.</p>}
         </div>
       </section>
 
